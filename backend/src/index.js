@@ -32,6 +32,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date() });
 });
 
+app.get("/", (req, res) => {
+  res.send("Server is running successfully");
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
