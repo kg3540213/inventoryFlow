@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { productAPI } from '../api';
 import { formatPrice, formatQuantity } from '../utils';
 
@@ -80,13 +80,10 @@ export const ProductBrowser = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async (params = {}) => {
     setLoading(true);
     setError('');
     try {
-      const params = {};
-      if (search) params.search = search;
-      if (dimension) params.dimension = dimension;
       const response = await productAPI.getAll(params);
       setProducts(response.products || []);
     } catch (err) {
@@ -94,16 +91,17 @@ export const ProductBrowser = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Run once on mount
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    loadProducts();
   }, []);
 
-  const handleSearch = () => {
+  useEffect(() => {
     loadProducts();
+  }, [loadProducts]);
+
+  const handleSearch = () => {
+    const params = {};
+    if (search) params.search = search;
+    if (dimension) params.dimension = dimension;
+    loadProducts(params);
   };
 
   return (

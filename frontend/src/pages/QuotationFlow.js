@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { productAPI, quotationAPI } from '../api';
 import { calculatePrice, formatPrice, getSupportedUnits } from '../utils';
 import { useAuth } from '../context/AuthContext';
@@ -122,28 +122,28 @@ export const QuotationFlow = () => {
 
   // Run loaders on mount
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    loadProducts();
-    loadQuotations();
-  }, []);
-
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     try {
       const response = await productAPI.getAll();
       setProducts(response.products || []);
     } catch (err) {
       setError('Failed to load products');
     }
-  };
+  }, []);
 
-  const loadQuotations = async () => {
+  const loadQuotations = useCallback(async () => {
     try {
       const response = await quotationAPI.getAll({}, token);
       setQuotations(response.quotations || []);
     } catch (err) {
       console.error('Failed to load quotations');
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    loadProducts();
+    loadQuotations();
+  }, [loadProducts, loadQuotations]);
 
   const handleAddToCart = () => {
     if (!selectedProduct || !quantity || !unit) {
