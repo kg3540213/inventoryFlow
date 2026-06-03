@@ -47,7 +47,11 @@ const createQuotation = async (req, res) => {
       totalAmount = totalAmount.plus(itemTotal);
     }
     
+    // Generate unique quotation number
+    const quotationNumber = `QT-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
     const quotation = new Quotation({
+      quotationNumber,
       customer: req.userId,
       items: quotationItems,
       totalAmount: new Decimal(totalAmount),
