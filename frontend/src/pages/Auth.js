@@ -1,56 +1,57 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const styles = {
   container: {
-    maxWidth: '400px',
-    margin: '50px auto',
+    maxWidth: '460px',
+    margin: '60px auto',
     padding: '30px',
     backgroundColor: 'white',
-    borderRadius: '8px',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+    borderRadius: '24px',
+    boxShadow: '0 24px 60px rgba(25,32,44,0.08)'
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '15px'
+    gap: '16px'
   },
   input: {
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    fontSize: '14px'
+    padding: '14px 16px',
+    border: '1px solid #e4eaf5',
+    borderRadius: '14px',
+    fontSize: '15px'
   },
   select: {
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    fontSize: '14px'
+    padding: '14px 16px',
+    border: '1px solid #e4eaf5',
+    borderRadius: '14px',
+    fontSize: '15px'
   },
   button: {
-    padding: '10px',
-    backgroundColor: '#27ae60',
+    padding: '14px 16px',
+    backgroundColor: '#2775c9',
     color: 'white',
     border: 'none',
-    borderRadius: '4px',
+    borderRadius: '14px',
     cursor: 'pointer',
     fontSize: '16px'
   },
   error: {
-    color: '#e74c3c',
-    padding: '10px',
-    backgroundColor: '#fadbd8',
-    borderRadius: '4px'
+    color: '#a2382d',
+    padding: '14px 16px',
+    backgroundColor: '#fdecea',
+    borderRadius: '14px'
   },
   link: {
     textAlign: 'center',
-    marginTop: '15px'
+    marginTop: '18px',
+    color: '#6b7a91'
   },
   a: {
-    color: '#3498db',
+    color: '#2775c9',
     textDecoration: 'none',
-    cursor: 'pointer'
+    fontWeight: '600'
   }
 };
 
@@ -140,7 +141,7 @@ export const Register = () => {
         </button>
       </form>
       <div style={styles.link}>
-        Already have an account? <a href="/login" style={styles.a}>Login here</a>
+        Already have an account? <Link to="/login" style={styles.a}>Login here</Link>
       </div>
     </div>
   );
@@ -203,7 +204,7 @@ export const Login = () => {
         </button>
       </form>
       <div style={styles.link}>
-        Don't have an account? <a href="/register" style={styles.a}>Register here</a>
+        Don't have an account? <Link to="/register" style={styles.a}>Register here</Link>
       </div>
     </div>
   );

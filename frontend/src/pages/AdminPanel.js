@@ -189,10 +189,16 @@ export const AdminPanel = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h2>👨‍💼 Admin Panel</h2>
-      {error && <div style={styles.error}>{error}</div>}
-      {success && <div style={styles.success}>{success}</div>}
+    <div>
+      <div className="page-heading">
+        <h2>👨‍💼 Admin Panel</h2>
+        <div>
+          <button className="button-secondary" onClick={() => setActiveTab('products')}>Products</button>
+          <button className="button-secondary" onClick={() => setActiveTab('quotations')}>Quotations</button>
+        </div>
+      </div>
+      {error && <div className="alert alert-error">{error}</div>}
+      {success && <div className="alert alert-success">{success}</div>}
 
       <div style={{ marginBottom: '20px', borderBottom: '2px solid #ddd' }}>
         <button

@@ -1,61 +1,48 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-
-const styles = {
-  container: {
-    minHeight: '100vh',
-    backgroundColor: '#f5f5f5'
-  },
-  nav: {
-    backgroundColor: '#1a1a1a',
-    color: 'white',
-    padding: '15px 30px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  title: {
-    fontSize: '20px',
-    fontWeight: 'bold'
-  },
-  userInfo: {
-    display: 'flex',
-    gap: '20px',
-    alignItems: 'center'
-  },
-  role: {
-    fontSize: '14px',
-    color: '#bbb'
-  },
-  logout: {
-    padding: '8px 16px',
-    backgroundColor: '#e74c3c',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer'
-  },
-  main: {
-    padding: '30px'
-  }
-};
+import { Link, useLocation } from 'react-router-dom';
 
 export const Layout = ({ children }) => {
   const { user, logout } = useAuth();
+  const location = useLocation();
+
+  const links = [
+    { path: '/products', label: 'Products' },
+    ...(user?.role === 'seller' ? [{ path: '/seller', label: 'My Quotations' }] : []),
+    ...(user?.role === 'admin' ? [{ path: '/admin', label: 'Admin Panel' }] : [])
+  ];
 
   return (
-    <div style={styles.container}>
-      <nav style={styles.nav}>
-        <h1 style={styles.title}>📦 Inventory Management</h1>
+    <div className="site-shell">
+      <header className="site-header">
+        <div>
+          <h1 className="site-title">📦 Inventory Management</h1>
+          <div className="small-text">Manage inventory, quotations and orders with ease</div>
+        </div>
+
+        <div className="site-nav">
+          {links.map(link => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={location.pathname === link.path ? 'active' : ''}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+
         {user && (
-          <div style={styles.userInfo}>
-            <span>{user.name}</span>
-            <span style={styles.role}>({user.role})</span>
-            <button style={styles.logout} onClick={logout}>Logout</button>
+          <div className="site-actions">
+            <div>
+              <div>{user.name}</div>
+              <div className="small-text">{user.email} · {user.role}</div>
+            </div>
+            <button className="button-danger" onClick={logout}>Logout</button>
           </div>
         )}
-      </nav>
-      <main style={styles.main}>{children}</main>
+      </header>
+      <main className="page-content">{children}</main>
     </div>
   );
 };

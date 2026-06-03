@@ -215,181 +215,214 @@ export const QuotationFlow = () => {
   }, require('decimal.js').default(0));
 
   return (
-    <div style={styles.container}>
-      <h2>📋 Quotation Management</h2>
-      {error && <div style={styles.error}>{error}</div>}
-      {success && <div style={styles.success}>{success}</div>}
+    <div>
+      <div className="page-heading">
+        <h2>📋 Quotation Management</h2>
+        <button className="button-secondary" onClick={() => setShowCart(true)}>
+          View Cart ({cartItems.length})
+        </button>
+      </div>
 
-      <div style={styles.section}>
-        <h3>Add Items to Quotation</h3>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
-          <select
-            style={styles.select}
-            value={selectedProduct?.id || ''}
-            onChange={(e) => {
-              const p = products.find(prod => prod.id === e.target.value);
-              setSelectedProduct(p);
-              setUnit(p ? getSupportedUnits(p.dimension)[0] : '');
-            }}
-          >
-            <option value="">Select Product</option>
-            {products.map(p => (
-              <option key={p.id} value={p.id}>
-                {p.name} ({p.sku || 'N/A'})
-              </option>
-            ))}
-          </select>
+      {error && <div className="alert alert-error">{error}</div>}
+      {success && <div className="alert alert-success">{success}</div>}
 
-          {selectedProduct && (
-            <>
+      <div className="section-card">
+        <div className="card-body">
+          <h3>Add Items to Quotation</h3>
+          <div className="field-grid" style={{ alignItems: 'end' }}>
+            <div className="control-group">
+              <label>Product</label>
+              <select
+                className="select-field"
+                value={selectedProduct?.id || ''}
+                onChange={(e) => {
+                  const p = products.find(prod => prod.id === e.target.value);
+                  setSelectedProduct(p);
+                  setUnit(p ? getSupportedUnits(p.dimension)[0] : '');
+                }}
+              >
+                <option value="">Select Product</option>
+                {products.map(p => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} ({p.sku || 'N/A'})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="control-group">
+              <label>Quantity</label>
               <input
                 type="number"
                 placeholder="Quantity"
-                style={styles.input}
+                className="input-field"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
                 step="0.01"
               />
+            </div>
+
+            <div className="control-group">
+              <label>Unit</label>
               <select
-                style={styles.select}
+                className="select-field"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
               >
-                {getSupportedUnits(selectedProduct.dimension).map(u => (
+                <option value="">Choose unit</option>
+                {selectedProduct && getSupportedUnits(selectedProduct.dimension).map(u => (
                   <option key={u} value={u}>{u}</option>
                 ))}
               </select>
-              {quantity && unit && (
-                <span style={{ fontWeight: 'bold' }}>
-                  {formatPrice(calculatePrice(selectedProduct.basePrice, quantity, unit, selectedProduct.dimension))}
-                </span>
-              )}
-            </>
-          )}
+            </div>
 
-          <button style={styles.button} onClick={handleAddToCart}>
-            Add to Cart
-          </button>
-          <button style={{ ...styles.button, backgroundColor: '#3498db' }} onClick={() => setShowCart(true)}>
-            View Cart ({cartItems.length})
-          </button>
+            <div className="control-group">
+              <label>&nbsp;</label>
+              <button className="button-primary" style={{ width: '100%' }} onClick={handleAddToCart}>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          {selectedProduct && quantity && unit && (
+            <div style={{ marginTop: '20px' }}>
+              <p className="small-text">
+                Estimated total: <strong>{formatPrice(calculatePrice(selectedProduct.basePrice, quantity, unit, selectedProduct.dimension))}</strong>
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
-      <div style={styles.section}>
-        <h3>Your Quotations</h3>
-        {quotations.length === 0 ? (
-          <p style={{ color: '#999' }}>No quotations yet</p>
-        ) : (
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>Quotation #</th>
-                <th style={styles.th}>Total Amount</th>
-                <th style={styles.th}>Status</th>
-                <th style={styles.th}>Items</th>
-                <th style={styles.th}>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {quotations.map(q => (
-                <tr key={q.id}>
-                  <td style={styles.td}>{q.quotationNumber}</td>
-                  <td style={styles.td}>{formatPrice(q.totalAmount)}</td>
-                  <td style={styles.td}>
-                    <span style={{
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      backgroundColor: q.status === 'approved' ? '#d5f4e6' : '#fff3cd',
-                      color: q.status === 'approved' ? '#27ae60' : '#856404'
-                    }}>
-                      {q.status}
-                    </span>
-                  </td>
-                  <td style={styles.td}>{q.items.length}</td>
-                  <td style={styles.td}>{new Date(q.createdAt).toLocaleDateString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+      <div className="section-card">
+        <div className="card-body">
+          <h3>Your Quotations</h3>
+          {quotations.length === 0 ? (
+            <p style={{ color: '#999' }}>No quotations yet</p>
+          ) : (
+            <div className="table-card">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Quotation #</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Items</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {quotations.map(q => (
+                    <tr key={q.id}>
+                      <td>{q.quotationNumber}</td>
+                      <td>{formatPrice(q.totalAmount)}</td>
+                      <td>
+                        <span className={`badge ${q.status === 'approved' ? 'badge-success' : 'badge-warning'}`}>
+                          {q.status}
+                        </span>
+                      </td>
+                      <td>{q.items.length}</td>
+                      <td>{new Date(q.createdAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
 
       {showCart && (
-        <div style={styles.modal}>
-          <div style={styles.modalContent}>
-            <h3>Shopping Cart ({cartItems.length} items)</h3>
+        <div style={styles.modal} onClick={() => setShowCart(false)}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+              <h3>Shopping Cart ({cartItems.length} items)</h3>
+              <button
+                type="button"
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  color: '#55617b'
+                }}
+                onClick={() => setShowCart(false)}
+              >
+                ×
+              </button>
+            </div>
             {cartItems.length === 0 ? (
               <p>Your cart is empty</p>
             ) : (
               <>
-                <table style={{ ...styles.table, marginTop: '20px' }}>
-                  <thead>
-                    <tr>
-                      <th style={styles.th}>Product</th>
-                      <th style={styles.th}>Quantity</th>
-                      <th style={styles.th}>Total Price</th>
-                      <th style={styles.th}>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cartItems.map(item => (
-                      <tr key={item.id}>
-                        <td style={styles.td}>{item.product.name}</td>
-                        <td style={styles.td}>{item.quantity} {item.unit}</td>
-                        <td style={styles.td}>{formatPrice(item.totalPrice)}</td>
-                        <td style={styles.td}>
-                          <button
-                            style={{ ...styles.button, backgroundColor: '#e74c3c', marginRight: '0' }}
-                            onClick={() => handleRemoveFromCart(item.id)}
-                          >
-                            Remove
-                          </button>
-                        </td>
+                <div className="table-card" style={{ marginTop: '20px' }}>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th>Action</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {cartItems.map(item => (
+                        <tr key={item.id}>
+                          <td>{item.product.name}</td>
+                          <td>{item.quantity} {item.unit}</td>
+                          <td>{formatPrice(item.totalPrice)}</td>
+                          <td>
+                            <button
+                              style={{ ...styles.button, backgroundColor: '#e74c3c', marginRight: '0' }}
+                              onClick={() => handleRemoveFromCart(item.id)}
+                            >
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
 
                 <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '2px solid #ddd' }}>
                   <p style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '15px' }}>
                     Total: {formatPrice(cartTotal)}
                   </p>
 
-                  <label style={{ display: 'block', marginBottom: '10px' }}>
-                    Delivery Address:
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Street"
-                    style={styles.input}
-                    value={deliveryAddress.street}
-                    onChange={(e) => setDeliveryAddress({...deliveryAddress, street: e.target.value})}
-                  />
-                  <input
-                    type="text"
-                    placeholder="City"
-                    style={styles.input}
-                    value={deliveryAddress.city}
-                    onChange={(e) => setDeliveryAddress({...deliveryAddress, city: e.target.value})}
-                  />
-                  <input
-                    type="text"
-                    placeholder="State"
-                    style={styles.input}
-                    value={deliveryAddress.state}
-                    onChange={(e) => setDeliveryAddress({...deliveryAddress, state: e.target.value})}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Zip Code"
-                    style={styles.input}
-                    value={deliveryAddress.zipCode}
-                    onChange={(e) => setDeliveryAddress({...deliveryAddress, zipCode: e.target.value})}
-                  />
+                  <div className="field-grid">
+                    <input
+                      type="text"
+                      placeholder="Street"
+                      style={styles.input}
+                      value={deliveryAddress.street}
+                      onChange={(e) => setDeliveryAddress({...deliveryAddress, street: e.target.value})}
+                    />
+                    <input
+                      type="text"
+                      placeholder="City"
+                      style={styles.input}
+                      value={deliveryAddress.city}
+                      onChange={(e) => setDeliveryAddress({...deliveryAddress, city: e.target.value})}
+                    />
+                    <input
+                      type="text"
+                      placeholder="State"
+                      style={styles.input}
+                      value={deliveryAddress.state}
+                      onChange={(e) => setDeliveryAddress({...deliveryAddress, state: e.target.value})}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Zip Code"
+                      style={styles.input}
+                      value={deliveryAddress.zipCode}
+                      onChange={(e) => setDeliveryAddress({...deliveryAddress, zipCode: e.target.value})}
+                    />
+                  </div>
                 </div>
 
-                <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+                <div style={{ marginTop: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                   <button
                     style={styles.button}
                     onClick={handleSubmitQuotation}
@@ -398,6 +431,7 @@ export const QuotationFlow = () => {
                     {loading ? 'Creating...' : 'Create Quotation'}
                   </button>
                   <button
+                    type="button"
                     style={{ ...styles.button, backgroundColor: '#95a5a6' }}
                     onClick={() => setShowCart(false)}
                   >
