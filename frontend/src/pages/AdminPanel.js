@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { productAPI, quotationAPI } from '../api';
 import { formatPrice } from '../utils';
 import { useAuth } from '../context/AuthContext';
@@ -91,12 +91,7 @@ export const AdminPanel = () => {
   });
   const { token } = useAuth();
 
-  useEffect(() => {
-    if (activeTab === 'products') loadProducts();
-    if (activeTab === 'quotations') loadQuotations();
-  }, [activeTab]);
-
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
       const response = await productAPI.getAll();
@@ -106,9 +101,9 @@ export const AdminPanel = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const loadQuotations = async () => {
+  const loadQuotations = useCallback(async () => {
     setLoading(true);
     try {
       const response = await quotationAPI.getAll({}, token);
@@ -118,7 +113,14 @@ export const AdminPanel = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    if (activeTab === 'products') loadProducts();
+    if (activeTab === 'quotations') loadQuotations();
+  }, [activeTab, loadProducts, loadQuotations]);
+
+  
 
   const handleAddProduct = async (e) => {
     e.preventDefault();

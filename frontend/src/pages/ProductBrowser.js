@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { productAPI } from '../api';
-import { formatPrice, formatQuantity, getSupportedUnits } from '../utils';
-import { useAuth } from '../context/AuthContext';
+import { formatPrice, formatQuantity } from '../utils';
 
 const styles = {
   container: {
@@ -97,6 +96,8 @@ export const ProductBrowser = () => {
     }
   };
 
+  // Run once on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadProducts();
   }, []);

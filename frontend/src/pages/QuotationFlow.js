@@ -120,6 +120,8 @@ export const QuotationFlow = () => {
   });
   const { token } = useAuth();
 
+  // Run loaders on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadProducts();
     loadQuotations();
