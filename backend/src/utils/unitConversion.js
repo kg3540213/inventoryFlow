@@ -1,13 +1,3 @@
-/**
- * Unit Conversion and Calculation Utilities
- * 
- * Strategy:
- * 1. Products store data in base units (g for weight, mL for volume, items for count)
- * 2. Users can order in any supported unit (g, kg, mL, L, items)
- * 3. Conversions happen BEFORE calculation and BEFORE storage
- * 4. Prices are calculated based on base unit prices
- */
-
 const Decimal = require('decimal.js');
 
 // Conversion factors to base units
